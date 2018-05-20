@@ -1,0 +1,35 @@
+{
+  "name": "extreme-port-scanner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "build": "gulp build & tsc",
+    "debug": "npm run build & node --inspect ./dist/app.js --dev",
+    "lint": "tslint ./src/**/*.ts --fix --exclude ./src/**/*.d.ts",
+    "postinstall": "node ./dist/post-install.js",
+    "start": "npm run build & node ./dist/app.js --dev",
+    "test": "npm run build & mocha --timeout 30000 ./dist/**/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barend-erasmus/extreme-port-scanner.git"
+  },
+  "author": "Barend Erasmus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/barend-erasmus/extreme-port-scanner/issues"
+  },
+  "homepage": "https://github.com/barend-erasmus/extreme-port-scanner#readme",
+  "devDependencies": {
+    "@types/mongodb": "^3.0.18",
+    "@types/node": "^10.1.2",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.4.0",
+    "run-sequence": "^2.2.1"
+  },
+  "dependencies": {
+    "mongodb": "^3.1.0-beta4",
+    "redis": "^2.8.0"
+  }
+}
