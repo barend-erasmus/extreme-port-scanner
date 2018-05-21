@@ -10,6 +10,8 @@
 
 ## Screenshot
 
+![](https://github.com/barend-erasmus/extreme-port-scanner/raw/master/images/screenshot.png)
+
 ## Commands
 
 ### Scan
