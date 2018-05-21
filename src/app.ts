@@ -1,36 +1,28 @@
+import chalk from 'chalk';
+import * as commander from 'commander';
 import * as fs from 'fs';
-import { PortCheckerBuilder } from './builders/port-checker';
-import { CheckPortResult } from './check-port-result';
 import { CommonPorts } from './common-ports';
-import { IPortChecker } from './interfaces/port-checker';
 import { PortScanner } from './port-scanner';
+import { PortScannerResult } from './port-scanner-result';
 
-(async () => {
-    const portScanner: PortScanner = new PortScanner(1000);
+commander
+    .command('scan <from> <to>')
+    .option('-f --file <file>', 'Output File')
+    .option('-p --ports <ports>', 'List of Ports')
+    .action((from: string, to: string, command: any) => {
+        const portScanner: PortScanner = new PortScanner((portScannerResult: PortScannerResult) => {
+            if (portScannerResult.isOpen) {
+                console.log(`${chalk.green('OPEN: ')} ${chalk.magenta(portScannerResult.port.toString())} on ${portScannerResult.ipAddress}`);
+            } else {
+                console.log(`${chalk.red('CLOSED: ')} ${chalk.magenta(portScannerResult.port.toString())} on ${portScannerResult.ipAddress}`);
+            }
 
-    const checkPortResults: CheckPortResult[] = await portScanner.checkIPAddressRange('167.99.1.1', [
-        CommonPorts.MONGODB,
-    ], '167.99.255.255');
+            if (command.file) {
+                fs.appendFileSync(command.file, `${portScannerResult.toCSV()}\r\n`);
+            }
+        }, 1000);
 
-    const portCheckerBuilder: PortCheckerBuilder = new PortCheckerBuilder();
+        portScanner.scanIPAddressRange(from, command.ports.split(',').map((x: string) => parseInt(x, undefined)), to);
+    });
 
-    for (const checkPortResult of checkPortResults) {
-        if (!checkPortResult.isOpen) {
-            continue;
-        }
-
-        const portChecker: IPortChecker = portCheckerBuilder.build(checkPortResult.port);
-
-        if (!portChecker) {
-            continue;
-        }
-
-        const passed: boolean = await portChecker.check(checkPortResult.ipAddress);
-
-        if (!passed) {
-            continue;
-        }
-
-        fs.appendFileSync('log.file', `${checkPortResult.ipAddress};${checkPortResult.isOpen};${checkPortResult.port};${checkPortResult.timestamp.getTime()}\r\n`);
-    }
-})();
+commander.parse(process.argv);

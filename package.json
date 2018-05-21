@@ -2,14 +2,12 @@
   "name": "extreme-port-scanner",
   "version": "1.0.0",
   "description": "",
-  "main": "gulpfile.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "gulp build & tsc",
-    "debug": "npm run build & node --inspect ./dist/app.js --dev",
     "lint": "tslint ./src/**/*.ts --fix --exclude ./src/**/*.d.ts",
-    "postinstall": "node ./dist/post-install.js",
-    "start": "npm run build & node ./dist/app.js --dev",
-    "test": "npm run build & mocha --timeout 30000 ./dist/**/*.test.js"
+    "start": "npm run build & node ./dist/app.js scan --ports 21,22 --file log.file 167.99.1.1 167.99.1.255"
   },
   "repository": {
     "type": "git",
@@ -29,7 +27,14 @@
     "run-sequence": "^2.2.1"
   },
   "dependencies": {
+    "chalk": "^2.4.1",
+    "commander": "^2.15.1",
+    "moment": "^2.22.1",
     "mongodb": "^3.1.0-beta4",
     "redis": "^2.8.0"
+  },
+  "bin": {
+    "extreme-port-scanner": "./bin/extreme-port-scanner",
+    "eps": "./bin/dextreme-port-scanner"
   }
 }
