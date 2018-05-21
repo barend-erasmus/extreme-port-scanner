@@ -1,3 +1,5 @@
+import chalk from 'chalk';
+
 export class SingleLineWriter {
 
     protected static CLEAR_LINE: string = new Buffer('1b5b304b', 'hex').toString();
@@ -23,7 +25,7 @@ export class SingleLineWriter {
             }
         }
 
-        SingleLineWriter.write(`|${str}| ${Math.floor(percentage)} % | ${addtional} |`);
+        SingleLineWriter.write(`|${str}| ${chalk.magenta(`${Math.floor(percentage)} %`)} | ${chalk.magenta(addtional)} |`);
     }
 
 }

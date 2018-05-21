@@ -1,13 +1,13 @@
 import * as mongodb from 'mongodb';
-import { PortCheckerResult } from '../models/port-checker-result';
+import { IPortChecker, PortCheckerResult } from '..';
 
-export class MongoDBPortChecker {
+export class MongoDBPortChecker implements IPortChecker {
 
-    public async check(ipAddress: string): Promise<PortCheckerResult> {
+    public async check(ipAddress: string, port: number): Promise<PortCheckerResult> {
         let client: mongodb.MongoClient = null;
 
         try {
-            client = await mongodb.MongoClient.connect(`mongodb://${ipAddress}:27017`);
+            client = await mongodb.MongoClient.connect(`mongodb://${ipAddress}:${port}`);
 
             const database: mongodb.Db = client.db('local');
 
@@ -17,9 +17,9 @@ export class MongoDBPortChecker {
 
             const meta: any = await this.getMeta(client);
 
-            return new PortCheckerResult(true, meta);
+            return new PortCheckerResult(ipAddress, true, meta, port, new Date());
         } catch (error) {
-            return new PortCheckerResult(false, null);
+            return new PortCheckerResult(ipAddress, false, null, port, new Date());
         } finally {
             if (client) {
                 client.close();

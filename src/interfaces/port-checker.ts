@@ -1,7 +1,7 @@
-import { PortCheckerResult } from '../models/port-checker-result';
+import { PortCheckerResult } from '..';
 
 export interface IPortChecker {
 
-    check(ipAddress: string): Promise<PortCheckerResult>;
+    check(ipAddress: string, port: number): Promise<PortCheckerResult>;
 
 }
