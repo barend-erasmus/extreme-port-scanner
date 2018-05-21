@@ -5,14 +5,18 @@ import { PortScannerResult } from './port-scanner-result';
 export class PortScanner {
 
     constructor(
+        protected concurrentScans: number,
         protected onPortScannerResult: (portScannerResult: PortScannerResult) => void,
+        protected onProgress: (rate: number, value: number) => void,
         protected timeout: number,
     ) {
 
     }
 
     public async scanIPAddressRange(from: string, ports: number[], to: string): Promise<PortScannerResult[]> {
-        const stepSize: number = 50;
+        const startTimestamp: Date = new Date();
+
+        const stepSize: number = this.concurrentScans;
 
         const results: PortScannerResult[] = [];
 
@@ -34,6 +38,12 @@ export class PortScanner {
                     results.push(portScannerResult);
                 }
             }
+
+            const numberOfScannedIPAddresses: number = ipAddressNumber + (end - ipAddressNumber >= stepSize ? stepSize : end - ipAddressNumber) - start;
+
+            const averageNumberOfIPAddressesPerSecond: number = numberOfScannedIPAddresses / ((new Date().getTime() - startTimestamp.getTime()) / 1000);
+
+            this.onProgress(averageNumberOfIPAddressesPerSecond, (numberOfScannedIPAddresses) / (end - start) * 100);
         }
 
         return results;
