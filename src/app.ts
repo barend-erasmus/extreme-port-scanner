@@ -22,7 +22,26 @@ commander
             }
         }, 1000);
 
-        portScanner.scanIPAddressRange(from, command.ports.split(',').map((x: string) => parseInt(x, undefined)), to);
+        let ports: number[] = [
+            CommonPorts.CASSANDRA,
+            CommonPorts.DNS,
+            CommonPorts.FTP,
+            CommonPorts.HTTP,
+            CommonPorts.HTTPS,
+            CommonPorts.MEMCACHED,
+            CommonPorts.MONGODB,
+            CommonPorts.MSSQL,
+            CommonPorts.MYSQL,
+            CommonPorts.POSTGRESQL,
+            CommonPorts.RABBITMQ,
+            CommonPorts.RDP,
+        ];
+
+        if (command.ports) {
+            ports = command.ports.split(',').map((x: string) => parseInt(x, undefined));
+        }
+
+        portScanner.scanIPAddressRange(from, ports, to);
     });
 
 commander.parse(process.argv);

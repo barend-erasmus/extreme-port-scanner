@@ -12,7 +12,7 @@ export class PortScanner {
     }
 
     public async scanIPAddressRange(from: string, ports: number[], to: string): Promise<PortScannerResult[]> {
-        const stepSize: number = 25;
+        const stepSize: number = 50;
 
         const results: PortScannerResult[] = [];
 
@@ -22,7 +22,7 @@ export class PortScanner {
         for (let ipAddressNumber = start; ipAddressNumber < end; ipAddressNumber += stepSize) {
             const tasks: Array<Promise<PortScannerResult[]>> = [];
 
-            for (let j = 0; j < stepSize; j++) {
+            for (let j = 0; j < (end - ipAddressNumber >= stepSize ? stepSize : end - ipAddressNumber); j++) {
                 const ipAddress: string = IPAddressHelper.fromNumber(ipAddressNumber + j);
                 tasks.push(this.scanPorts(ipAddress, ports));
             }
