@@ -44,12 +44,12 @@ export class ScanCommandHandler {
         for (const result of portScannerResults) {
             if (result.isOpen) {
                 openCount++;
-                if (parameters.verbose && parameters.showOpen) {
+                if (!parameters.advanced && parameters.showOpen && parameters.verbose) {
                     console.log(`${chalk.green('OPEN: ')} ${chalk.magenta(result.port.toString())} on ${result.ipAddress}`);
                 }
             } else {
                 closeCount++;
-                if (parameters.verbose && parameters.showClose) {
+                if (!parameters.advanced && parameters.showClose && parameters.verbose) {
                     console.log(`${chalk.red('CLOSED: ')} ${chalk.magenta(result.port.toString())} on ${result.ipAddress}`);
                 }
             }
@@ -68,10 +68,6 @@ export class ScanCommandHandler {
         const onlyShowClose: boolean = command.onlyShowClose ? true : false;
 
         const onlyShowOpen: boolean = command.onlyShowOpen ? true : false;
-
-        const showClose: boolean = (!onlyShowClose && !onlyShowOpen) ? true : (!onlyShowClose && onlyShowOpen) ? false : (onlyShowClose && !onlyShowOpen) ? true : true;
-
-        const showOpen: boolean = (!onlyShowClose && !onlyShowOpen) ? true : (!onlyShowClose && onlyShowOpen) ? true : (onlyShowClose && !onlyShowOpen) ? false : true;
 
         let ports: number[] = [
             CommonPorts.CASSANDRA,
@@ -95,6 +91,10 @@ export class ScanCommandHandler {
             ports = command.ports.split(',').map((x: string) => parseInt(x, undefined));
         }
 
+        const showClose: boolean = (!onlyShowClose && !onlyShowOpen) ? true : (!onlyShowClose && onlyShowOpen) ? false : (onlyShowClose && !onlyShowOpen) ? true : true;
+
+        const showOpen: boolean = (!onlyShowClose && !onlyShowOpen) ? true : (!onlyShowClose && onlyShowOpen) ? true : (onlyShowClose && !onlyShowOpen) ? false : true;
+
         const verbose: boolean = command.verbose ? true : false;
 
         return {
@@ -103,9 +103,9 @@ export class ScanCommandHandler {
             file,
             onlyShowClose,
             onlyShowOpen,
+            ports,
             showClose,
             showOpen,
-            ports,
             verbose,
         };
     }
