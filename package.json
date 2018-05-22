@@ -1,13 +1,13 @@
 {
   "name": "extreme-port-scanner",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "gulp build & tsc",
     "lint": "tslint ./src/**/*.ts --fix --exclude ./src/**/*.d.ts",
-    "start": "npm run build & node ./dist/app.js scan -a -c 150 --file log.file --onlyShowOpen -p 21 -v 46.101.1.1 46.101.1.255"
+    "start": "npm run build & node ./dist/app.js scan -c 150 --onlyShowOpen -p 21 -v 46.101.1.1 46.101.1.255"
   },
   "repository": {
     "type": "git",

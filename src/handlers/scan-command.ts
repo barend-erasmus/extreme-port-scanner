@@ -55,6 +55,39 @@ export class ScanCommandHandler {
             }
         }
 
+        console.log(`|--------|-------------|------------|`);
+        console.log(`| Port   | Close Count | Open Count |`);
+
+        const closePortCounts: number[] = [];
+        const openPortCounts: number[] = [];
+
+        for (const result of portScannerResults) {
+            if (!closePortCounts[result.port]) {
+                closePortCounts[result.port] = 0;
+            }
+
+            if (!openPortCounts[result.port]) {
+                openPortCounts[result.port] = 0;
+            }
+
+            if (result.isOpen) {
+                openPortCounts[result.port] += 1;
+            } else {
+                closePortCounts[result.port] += 1;
+            }
+        }
+
+        for (let port = 0; port < Math.max(closePortCounts.length, openPortCounts.length); port ++) {
+            const closePortCount: number = closePortCounts[port];
+            const openPortCount: number = openPortCounts[port];
+
+            if (!closePortCount && !openPortCount) {
+                continue;
+            }
+
+            console.log(`| ${port}   | ${closePortCount} | ${openPortCount} |`);
+        }
+
         console.log(`Found ${chalk.green(openCount.toString())} open ports and ${chalk.red(closeCount.toString())} closed ports`);
     }
 
@@ -136,8 +169,11 @@ export class ScanCommandHandler {
 
     protected static printParameters(parameters: { advanced: boolean, concurrentScans: number, file: string, onlyShowClose: boolean, onlyShowOpen: boolean, showClose: boolean, showOpen: boolean, ports: number[], verbose: boolean }): void {
         console.log(`${chalk.green('Extreme Port Scanner:')} `);
+        console.log(`    Advanced: ${chalk.magenta(parameters.advanced ? 'TRUE' : 'FALSE')}`);
         console.log(`    Concurrent Scans: ${chalk.magenta(parameters.concurrentScans.toString())}`);
         console.log(`    File: ${chalk.magenta(parameters.file ? path.resolve(parameters.file) : 'NONE')}`);
+        console.log(`    Only Show Close: ${chalk.magenta(parameters.onlyShowClose ? 'TRUE' : 'FALSE')}`);
+        console.log(`    Only Show Open: ${chalk.magenta(parameters.onlyShowOpen ? 'TRUE' : 'FALSE')}`);
         console.log(`    Ports: ${chalk.magenta(parameters.ports.join(','))}`);
         console.log(`    Verbose: ${chalk.magenta(parameters.verbose ? 'TRUE' : 'FALSE')}`);
     }
