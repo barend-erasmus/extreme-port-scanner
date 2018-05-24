@@ -1,13 +1,13 @@
 {
   "name": "extreme-port-scanner",
-  "version": "1.0.7",
-  "description": "",
+  "version": "1.0.8",
+  "description": "Port scanner with advanced features",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "gulp build & tsc",
     "lint": "tslint ./src/**/*.ts --fix --exclude ./src/**/*.d.ts",
-    "start": "npm run build & node ./dist/app.js scan -c 150 --onlyShowOpen -p 21 -v 46.101.1.1 46.101.1.255"
+    "start": "npm run build & node ./dist/app.js scan -c 75 --onlyShowOpen -p 11211 -v 94.236.100.249 94.236.200.249"
   },
   "repository": {
     "type": "git",
@@ -40,5 +40,13 @@
   "bin": {
     "extreme-port-scanner": "./bin/extreme-port-scanner",
     "eps": "./bin/extreme-port-scanner"
-  }
+  },
+  "keywords": [
+    "Close Ports",
+    "IP Scanner",
+    "MongoDB Scanner",
+    "Open Ports",
+    "Port Scanner",
+    "Redis Scanner"
+  ]
 }

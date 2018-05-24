@@ -52,6 +52,6 @@ extreme-port-scanner scan
 
 *Only Show Open* - Only log open ports.
 
-*Ports* - Comma-separated list of ports. Defaults to 9042,53,21,80,8080,8888,443,389,11211,27017,1433,3306,5432,5672,3389.
+*Ports* - Comma-separated list of ports. Defaults to 9042,53,21,80,8080,8888,443,389,11211,27017,1433,3306,5432,5672,3389,6379,25,22,3690,23.
 
 *Verbose* - Log to console.

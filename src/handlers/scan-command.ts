@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as humanizeDuration from 'humanize-duration';
 import * as path from 'path';
 import { CommonPorts, IPortChecker, PortCheckerBuilder, PortCheckerResult, PortScanner, PortScannerResult, SingleLineWriter } from '..';
+import { TableWriter } from '../console-writers/table';
 
 export class ScanCommandHandler {
 
@@ -55,38 +56,7 @@ export class ScanCommandHandler {
             }
         }
 
-        console.log(`|--------|-------------|------------|`);
-        console.log(`| Port   | Close Count | Open Count |`);
-
-        const closePortCounts: number[] = [];
-        const openPortCounts: number[] = [];
-
-        for (const result of portScannerResults) {
-            if (!closePortCounts[result.port]) {
-                closePortCounts[result.port] = 0;
-            }
-
-            if (!openPortCounts[result.port]) {
-                openPortCounts[result.port] = 0;
-            }
-
-            if (result.isOpen) {
-                openPortCounts[result.port] += 1;
-            } else {
-                closePortCounts[result.port] += 1;
-            }
-        }
-
-        for (let port = 0; port < Math.max(closePortCounts.length, openPortCounts.length); port ++) {
-            const closePortCount: number = closePortCounts[port];
-            const openPortCount: number = openPortCounts[port];
-
-            if (!closePortCount && !openPortCount) {
-                continue;
-            }
-
-            console.log(`| ${port}   | ${closePortCount} | ${openPortCount} |`);
-        }
+        TableWriter.write(ScanCommandHandler.portScannerResultsToTable(portScannerResults));
 
         console.log(`Found ${chalk.green(openCount.toString())} open ports and ${chalk.red(closeCount.toString())} closed ports`);
     }
@@ -118,6 +88,11 @@ export class ScanCommandHandler {
             CommonPorts.POSTGRESQL,
             CommonPorts.RABBITMQ,
             CommonPorts.RDP,
+            CommonPorts.REDIS,
+            CommonPorts.SMTP,
+            CommonPorts.SSH,
+            CommonPorts.SVN,
+            CommonPorts.TELNET,
         ];
 
         if (command.ports) {
@@ -165,6 +140,48 @@ export class ScanCommandHandler {
         const humanizeDurationResult: string = humanizeDuration(secondsRemaining * 1000, { round: true });
 
         SingleLineWriter.writeProgressBar(`${Math.floor(rate)} per second | ${humanizeDurationResult} remaining`, value);
+    }
+
+    protected static portScannerResultsToTable(portScannerResults: PortScannerResult[]): string[][] {
+        const table: string[][] = [
+            ['Port', 'Close Count', 'Open Count'],
+        ];
+
+        const closePortCounts: number[] = [];
+        const openPortCounts: number[] = [];
+
+        for (const result of portScannerResults) {
+            if (!closePortCounts[result.port]) {
+                closePortCounts[result.port] = 0;
+            }
+
+            if (!openPortCounts[result.port]) {
+                openPortCounts[result.port] = 0;
+            }
+
+            if (result.isOpen) {
+                openPortCounts[result.port] += 1;
+            } else {
+                closePortCounts[result.port] += 1;
+            }
+        }
+
+        for (let port = 0; port < Math.max(closePortCounts.length, openPortCounts.length); port ++) {
+            const closePortCount: number = closePortCounts[port];
+            const openPortCount: number = openPortCounts[port];
+
+            if (!closePortCount && !openPortCount) {
+                continue;
+            }
+
+            table.push([
+                port.toString(),
+                closePortCount.toString(),
+                openPortCount.toString(),
+            ]);
+        }
+
+        return table;
     }
 
     protected static printParameters(parameters: { advanced: boolean, concurrentScans: number, file: string, onlyShowClose: boolean, onlyShowOpen: boolean, showClose: boolean, showOpen: boolean, ports: number[], verbose: boolean }): void {
