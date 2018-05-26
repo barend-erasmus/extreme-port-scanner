@@ -3,6 +3,7 @@ export * from './common-ports';
 export * from './console-writers/single-line';
 export * from './handlers/scan-command';
 export * from './interfaces/port-checker';
+export * from './host-scanner';
 export * from './ip-address-helper';
 export * from './models/port-checker-result';
 export * from './port-checkers/mongodb';

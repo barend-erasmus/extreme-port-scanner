@@ -1,6 +1,6 @@
 {
   "name": "extreme-port-scanner",
-  "version": "1.0.8",
+  "version": "1.0.12",
   "description": "Port scanner with advanced features",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

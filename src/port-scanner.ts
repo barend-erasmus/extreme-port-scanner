@@ -45,7 +45,9 @@ export class PortScanner {
 
             const averageNumberOfIPAddressesPerSecond: number = numberOfScannedIPAddresses / ((new Date().getTime() - startTimestamp.getTime()) / 1000);
 
-            this.onProgress(averageNumberOfIPAddressesPerSecond, numberOfRemainingIPAddresses, (numberOfScannedIPAddresses) / (end - start) * 100);
+            if (this.onProgress) {
+                this.onProgress(averageNumberOfIPAddressesPerSecond, numberOfRemainingIPAddresses, (numberOfScannedIPAddresses) / (end - start) * 100);
+            }
         }
 
         return results;
